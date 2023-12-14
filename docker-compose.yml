@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+
+  raspberrypi-pico-sdk:
+    container_name: RasPi-Pico-SDK
+    restart: no
+    image: dreamcolor/raspberrypi-pico-sdk
+    # build: .
+    privileged: true
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./projects:/root/pico/projects
