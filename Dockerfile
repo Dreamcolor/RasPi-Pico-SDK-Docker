@@ -1,17 +1,23 @@
 FROM ubuntu:latest
 WORKDIR /root/pico
 
-# RUN sed -i s@/archive.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list && sed -i s@/security.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list && sed -i s@/ports.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list && apt-get clean
-RUN apt-get update && apt-get full-upgrade -y
+RUN sed -i s@/archive.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list && \
+    sed -i s@/security.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list && \
+    sed -i s@/ports.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list && \
+    apt-get clean && \
+    apt-get update && \
+    apt-get full-upgrade -y
 
-RUN apt-get install -y \
+RUN apt-get install -y --no-install-recommends \
     cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential \
     libstdc++-arm-none-eabi-newlib \
     minicom \
     automake autoconf texinfo libtool libftdi-dev libusb-1.0-0-dev \
     gdb-multiarch \
     pkg-config \
-    wget git usbutils
+    wget git usbutils python3-pip && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip3 install rshell
 
 RUN git clone https://github.com/raspberrypi/pico-sdk.git --branch master && \
     cd pico-sdk && \
@@ -28,7 +34,19 @@ RUN echo 'export PICO_SDK_PATH=/root/pico/pico-sdk' >> /root/.bashrc && \
     echo 'export PICO_PLAYGROUND_PATH=/root/pico/pico-playground' >> /root/.bashrc
 
 RUN git clone https://github.com/raspberrypi/openocd.git --branch rp2040 --recursive --depth=1 && \
-    cd openocd && ./bootstrap && ./configure --enable-ftdi --enable-sysfsgpio --enable-bcm2835gpio && make -j4 && make install && cd ..
+    cd openocd && \
+    ./bootstrap && \
+    ./configure --enable-ftdi --enable-sysfsgpio --enable-bcm2835gpio && \
+    make -j4 && \
+    make install && \
+    cd ..
 
 RUN git clone https://github.com/raspberrypi/picotool.git --branch master && \
-    cd picotool && mkdir build && cd build && export PICO_SDK_PATH=/root/pico/pico-sdk && cmake ../ && make && make install && cd ..
+    cd picotool && \
+    mkdir build && \
+    cd build && \
+    export PICO_SDK_PATH=/root/pico/pico-sdk && \
+    cmake ../ && \
+    make && \
+    make install && \
+    cd ..
