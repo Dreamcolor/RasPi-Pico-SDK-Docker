@@ -16,6 +16,7 @@ Raspberry Pi Pico SDK Container and make your system clean.
 * 在 ~/.bashrc 中设置 PICO_SDK_PATH，PICO_EXAMPLES_PATH，PICO_EXTRAS_PATH 和 PICO_PLAYGROUND_PATH 环境变量
 * 下载、构建并安装 picotool 软件
 * 下载、构建并安装 OpenOCD 软件
+* 集成 pico-project-generator 并添加环境变量，可在任意目录运行。
 * 附加下载 usbutils 及 [Getting started with Raspberry Pi Pico](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf?_gl=1*lh1tgu*_ga*MTE5NDA3NjE3Mi4xNzAyMTIzNTYz*_ga_22FD70LWDS*MTcwMjUyMTI5NS4xMy4xLjE3MDI1MjIzMDQuMC4wLjA.) 中提及到的所有软件，方便各位的使用。
 
 ## 使用方法：
@@ -47,6 +48,7 @@ Raspberry Pi Pico SDK Container and make your system clean.
 * 本脚本会在镜像中的 /root/pico/ 目录中创建 projects 目录用于存放您开发的项目。并且默认会将目录映射到脚本所在目录的 projects 目录中。
 * 如果想修改此目录，可以对脚本文件或以上“方法 1”中的 `<local-dir>` 位置进行修改。
 * 如果构建镜像时想修改更新源，可以将 Dockerfile 文件中注释部分进行修改，并更换成您喜欢的更新源。
+* 如果需要修改时区，可在生成脚本内直接修改。
 
 ### 代码编写：
 

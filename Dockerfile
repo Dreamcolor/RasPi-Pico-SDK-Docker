@@ -6,16 +6,22 @@ RUN sed -i s@/archive.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sour
     sed -i s@/ports.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list && \
     apt-get clean && \
     apt-get update && \
-    apt-get full-upgrade -y
+    apt-get full-upgrade -y && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y --no-install-recommends \
+ENV TZ=Asia/Chongqing
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential \
     libstdc++-arm-none-eabi-newlib \
     minicom \
     automake autoconf texinfo libtool libftdi-dev libusb-1.0-0-dev \
     gdb-multiarch \
     pkg-config \
-    wget git usbutils python3-pip && \
+    wget git usbutils python3-pip python3-tk && \
     rm -rf /var/lib/apt/lists/* && \
     pip3 install rshell
 
@@ -31,7 +37,8 @@ RUN git clone https://github.com/raspberrypi/pico-sdk.git --branch master && \
 RUN echo 'export PICO_SDK_PATH=/root/pico/pico-sdk' >> /root/.bashrc && \
     echo 'export PICO_EXAMPLES_PATH=/root/pico/pico-examples' >> /root/.bashrc && \
     echo 'export PICO_EXTRAS_PATH=/root/pico/pico-extras' >> /root/.bashrc && \
-    echo 'export PICO_PLAYGROUND_PATH=/root/pico/pico-playground' >> /root/.bashrc
+    echo 'export PICO_PLAYGROUND_PATH=/root/pico/pico-playground' >> /root/.bashrc && \
+    echo 'export PATH=$PATH:/root/pico/pico-project-generator' >> /root/.bashrc
 
 RUN git clone https://github.com/raspberrypi/openocd.git --branch rp2040 --recursive --depth=1 && \
     cd openocd && \
